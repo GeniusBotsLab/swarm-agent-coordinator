@@ -1,0 +1,2 @@
+requests==2.32.5
+cursor-sdk>=1.0.24
