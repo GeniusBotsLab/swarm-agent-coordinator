@@ -1,0 +1,62 @@
+services:
+  control:
+    build: .
+    env_file: .env
+    environment:
+      AGENT_ONLY: "false"
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - swarm_data:/data
+    restart: unless-stopped
+  agent-api:
+    build: .
+    env_file: .env
+    environment:
+      AGENT_ONLY: "true"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8443"]
+    ports:
+      - "8443:8443"
+    volumes:
+      - swarm_data:/data
+    restart: unless-stopped
+  master:
+    build:
+      context: .
+      dockerfile: master/Dockerfile
+    env_file: .env
+    environment:
+      SWARM_CONTROL_URL: http://control:8000
+      SWARM_ROOM_ID: ${SWARM_ROOM_ID}
+      LLM_BASE_URL: ${LLM_BASE_URL}
+      LLM_MODEL: ${LLM_MODEL}
+      MASTER_POLL_SECONDS: ${MASTER_POLL_SECONDS:-10}
+      MASTER_MIN_REPLY_SECONDS: ${MASTER_MIN_REPLY_SECONDS:-20}
+      MASTER_PROACTIVE: ${MASTER_PROACTIVE:-false}
+      MASTER_PROACTIVE_INTERVAL: ${MASTER_PROACTIVE_INTERVAL:-60}
+      MASTER_MODE: ${MASTER_MODE:-chat}
+      MASTER_METRICS_PATH: /data/master-metrics.json
+    volumes:
+      - swarm_data:/data
+    depends_on:
+      - control
+    restart: unless-stopped
+  nats:
+    image: nats:2.11-alpine
+    command: ["-js", "-sd", "/data"]
+    volumes:
+      - nats_data:/data
+    restart: unless-stopped
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: swarm
+      POSTGRES_USER: swarm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+volumes:
+  swarm_data:
+  nats_data:
+  postgres_data:

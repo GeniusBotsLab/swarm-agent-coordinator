@@ -1,0 +1,17 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+*.db
+/data/
+.venv/
+backups/
+packages/
+*.zip
+.master_*
+master-state.json
+master-metrics.json
+*.log
+*.sql
+attachments/
