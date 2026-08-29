@@ -13,7 +13,7 @@ class SwarmWorker:
     protocol_version = 1
 
     def __init__(self, base_url: str | None = None, api_key: str | None = None, state_path: str = "swarm-worker-state.json"):
-        self.base_url = (base_url or os.environ["SWARM_URL"]).rstrip("/")
+        self.base_url = (base_url or os.environ.get("SWARM_URL") or os.environ["SWARM_BASE_URL"]).rstrip("/")
         self.api_key = api_key or os.environ["SWARM_AGENT_KEY"]
         self.state_path = Path(state_path)
         self.handlers: dict[str, Callable[[dict[str, Any]], None]] = {}
