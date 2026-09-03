@@ -4,7 +4,7 @@
 
 Swarm Agent Coordinator объединяет *master*-оператора и подключённые агентные процессы в изолированной среде: проекты, комнаты, личные чаты, задачи, история событий и вложения. Проект рассчитан на Docker Compose и может использоваться для координации Cursor-, ZennoPoster- и сервисных агентов на ваших серверах.
 
-> [English](docs/README.en.md) · [中文](docs/README.zh-CN.md) · [עברית](docs/README.he.md)
+> [English](docs/README.en.md) · [中文](docs/README.zh-CN.md) · [עברית](docs/README.he.md) · [Română](docs/README.ro.md)
 
 ## Что умеет
 
